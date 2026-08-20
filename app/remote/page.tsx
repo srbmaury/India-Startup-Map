@@ -1,0 +1,9 @@
+import { remoteWork, startups } from "../data";
+
+export default function RemoteCompaniesPage(){
+  const items=startups.filter(startup=>remoteWork[startup.slug]);
+  const remoteFirst=items.filter(startup=>remoteWork[startup.slug].type!=="ROLE_DEPENDENT");
+  const roleDependent=items.filter(startup=>remoteWork[startup.slug].type==="ROLE_DEPENDENT");
+  const cards=(companies:typeof items)=>companies.map(startup=>{const policy=remoteWork[startup.slug];return <article className="startupCard" key={startup.slug}><div className="cardHead"><span className="logo" style={{background:startup.color}}><span>{startup.initials}</span><img src={startup.logoUrl} alt={`${startup.name} logo`}/></span><b className="hiring">{policy.label.toUpperCase()}</b></div><h3>{startup.name}</h3><p>{policy.summary}</p><div className="meta">{startup.city}<br/>{startup.sector}</div><div className="cardFoot"><a href={policy.source} target="_blank" rel="noopener noreferrer">Remote-work source ↗</a><a href={`/startup/${startup.slug}`}><b>View profile →</b></a></div></article>});
+  return <main><header className="innerNav shell"><a className="brand" href="/"><span className="brandMark">ISM</span><span>India Startup Map</span></a><a href="/explore">← All companies</a></header><section className="listingHero shell"><div className="eyebrow">REMOTE WORK / EVIDENCE-LABELLED</div><h2>Remote-friendly <em>companies</em></h2><p>{items.length} companies have an explicit remote-work record. First-party company evidence and community-directory evidence remain clearly linked; always check the careers page for current role eligibility.</p></section><section className="shell"><h3 className="remoteSectionTitle">REMOTE-FIRST OR DISTRIBUTED</h3><div className="startupGrid remoteGrid">{cards(remoteFirst)}</div><h3 className="remoteSectionTitle">REMOTE DEPENDS ON THE ROLE</h3><div className="startupGrid remoteGrid">{cards(roleDependent)}</div></section></main>;
+}

@@ -1,0 +1,11 @@
+"use client";
+import { useEffect, useRef } from "react";
+import * as maplibregl from "maplibre-gl";
+import "maplibre-gl/dist/maplibre-gl.css";
+import { startups } from "./data";
+type Startup = (typeof startups)[number];
+export default function StartupMap({items,city}:{items:Startup[];city?:string}){
+ const container=useRef<HTMLDivElement>(null);
+ useEffect(()=>{if(!container.current)return;const center=(items.length?[items.reduce((n,x)=>n+x.lng,0)/items.length,items.reduce((n,x)=>n+x.lat,0)/items.length]:[78.9629,20.5937]) as [number,number];const map=new maplibregl.Map({container:container.current,center,zoom:city?11.2:4,style:{version:8,sources:{osm:{type:"raster",tiles:["https://tile.openstreetmap.org/{z}/{x}/{y}.png"],tileSize:256,attribution:"© OpenStreetMap contributors"}},layers:[{id:"osm",type:"raster",source:"osm"}]}});map.addControl(new maplibregl.NavigationControl({showCompass:false}),"top-right");items.forEach(s=>{const el=document.createElement("button");el.className="realMapMarker";el.style.background=s.color;el.setAttribute("aria-label",`Open ${s.name} on map`);const fallback=document.createElement("span");fallback.textContent=s.initials;const logo=document.createElement("img");logo.src=s.logoUrl;logo.alt="";logo.addEventListener("error",()=>logo.remove());el.append(fallback,logo);const popup=new maplibregl.Popup({offset:22,closeButton:false}).setHTML(`<div class="mapPopup"><small>${s.sector} · ${s.stage}</small><h3>${s.name}</h3><p>${s.description}</p><div>${s.neighborhood}, ${s.city}</div><a href="/startup/${s.slug}">View profile →</a></div>`);new maplibregl.Marker({element:el,anchor:"bottom"}).setLngLat([s.lng,s.lat]).setPopup(popup).addTo(map);});return()=>map.remove();},[items,city]);
+ return <div className="realMap" ref={container} aria-label={`Interactive startup map${city?` for ${city}`:""}`}/>;
+}
