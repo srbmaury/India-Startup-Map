@@ -22,6 +22,7 @@ test("server-renders the India Startup Map homepage", async () => {
   assert.match(html, /Explore India/);
   assert.match(html, /LIVE ECOSYSTEM MAP/);
   assert.match(html, /Remote companies/);
+  assert.match(html, /github\.com\/srbmaury\/India-Startup-Map/);
   assert.match(html, /locations need review/);
   assert.doesNotMatch(html, /codex-preview|Building your site|Starter Project/);
 });

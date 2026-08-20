@@ -38,7 +38,7 @@ export default function Home() {
     <main>
       <nav className="nav shell">
         <a className="brand" href="/"><span className="brandMark">ISM</span><span>India Startup Map</span></a>
-        <div className="navLinks"><a href="/explore">Explore</a><a href="/remote">Remote companies</a><a href="/tech">Tech stacks</a><a href="/submit">Add a startup</a></div>
+        <div className="navLinks"><a href="/explore">Explore</a><a href="/remote">Remote companies</a><a href="/tech">Tech stacks</a><a href="/submit">Add a startup</a><a href="https://github.com/srbmaury/India-Startup-Map" target="_blank" rel="noreferrer">GitHub ↗</a></div>
         <a className="navButton warningButton" href="/location-unverified">{locationUnverifiedStartups.length} locations need review</a><button className="navButton" onClick={() => { window.location.href = "/explore"; }}>Browse companies <span>↗</span></button>
       </nav>
       <section className="hero shell">
