@@ -50,4 +50,6 @@ test("protects admin while leaving the public directory anonymous", async () => 
   const adminResponse = await render("/admin");
   assert.ok([302, 307, 308].includes(adminResponse.status));
   assert.match(adminResponse.headers.get("location") ?? "", /^\/signin-with-chatgpt\?/);
+  const reviewResponse = await render("/admin/review/swiggy?issue=location");
+  assert.ok([302, 307, 308].includes(reviewResponse.status));
 });
