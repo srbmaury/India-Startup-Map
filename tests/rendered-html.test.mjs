@@ -42,3 +42,11 @@ test("ships the core directory routes and verified datasets", async () => {
   assert.match(tech, /VERIFIED CLAIMS ONLY/);
   assert.doesNotThrow(() => JSON.parse(hosting));
 });
+
+test("protects admin while leaving the public directory anonymous", async () => {
+  const publicResponse = await render("/explore");
+  assert.equal(publicResponse.status, 200);
+  const adminResponse = await render("/admin");
+  assert.ok([302, 307, 308].includes(adminResponse.status));
+  assert.match(adminResponse.headers.get("location") ?? "", /^\/signin-with-chatgpt\?/);
+});
