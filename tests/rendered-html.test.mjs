@@ -38,6 +38,7 @@ test("ships the core directory routes and verified datasets", async () => {
   assert.match(data, /mappedStartups/);
   assert.match(data, /locationUnverifiedStartups/);
   assert.match(data, /remoteWork/);
+  assert.match(data, /bangaloreMapCompanies/);
   assert.match(homepage, /cityToSlug/);
   assert.match(remote, /REMOTE WORK \/ EVIDENCE-LABELLED/);
   assert.match(tech, /VERIFIED CLAIMS ONLY/);
