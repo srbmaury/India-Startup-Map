@@ -9,6 +9,7 @@ import { remoteCompanies } from "./remote-companies";
 import { targetTechCompanies } from "./target-tech-companies";
 import { locationOverrides } from "./location-overrides";
 import { bangaloreMapCompanies } from "./bangalore-map-companies";
+import { multiCityCompanies } from "./multi-city-companies";
 
 const featuredStartups = [
   {slug:"razorpay",name:"Razorpay",initials:"RZ",description:"Full-stack financial solutions for businesses to accept, process and disburse payments.",city:"Bengaluru",neighborhood:"Koramangala",sector:"FinTech",stage:"Series C+",size:"500+",tech:["Java","React","Kubernetes","AWS"],hiring:true,founders:["Harshil Mathur","Shashank Kumar"],founded:2014,color:"#ff5b2e",roles:18,lat:12.9352,lng:77.6245},
@@ -233,6 +234,16 @@ const bangaloreMapStartups = bangaloreMapCompanies.map((company,index)=>({
   locationPrecision:"OFFICE" as const,locationSource:company.source,verificationStatus:"BANGALORE_MAP_SOURCE" as const,
 }));
 
+const multiCityStartups = multiCityCompanies.map((company,index)=>({
+  slug:company.slug,name:company.name,
+  initials:company.name.replace(/[^A-Za-z0-9 ]/g,"").split(/\s+/).map(x=>x[0]).join("").slice(0,3).toUpperCase(),
+  description:`${company.name} is a ${company.industry} organization headquartered in ${company.city}, with an official website and headquarters record in Wikidata.`,
+  city:company.city,neighborhood:company.city,sector:company.sector,stage:"Directory sourced",size:"Not disclosed",
+  tech:[],hiring:false,founders:[],founded:company.founded,
+  color:["#2457ff","#7c3aed","#00a896","#ff6b35","#ef476f"][index%5],roles:0,lat:company.lat,lng:company.lng,
+  locationPrecision:"CITY" as const,locationSource:company.source,verificationStatus:"DIRECTORY_SOURCE" as const,
+}));
+
 const remoteDirectoryStartups = remoteCompanies.map((company,index)=>({
   slug:company.slug,name:company.name,
   initials:company.name.replace(/[^A-Za-z0-9 ]/g,"").split(/\s+/).map(x=>x[0]).join("").slice(0,3).toUpperCase(),
@@ -263,6 +274,7 @@ export const cityToSlug = (city: string) => city
   .replace(/^-+|-+$/g, "");
 
 export const startupLinks: Record<string, { website: string; careers: string }> = {
+  ...Object.fromEntries(multiCityCompanies.map(company=>[company.slug,{website:company.website,careers:`https://www.linkedin.com/jobs/search/?keywords=${encodeURIComponent(company.name)}`}])) ,
   ...Object.fromEntries(bangaloreMapCompanies.map(company=>[company.slug,{website:company.website,careers:company.careers}])),
   ...Object.fromEntries(targetTechCompanies.map(company=>[company.slug,{website:company.website,careers:company.careers}])),
   ...Object.fromEntries(remoteCompanies.map(company=>[company.slug,{website:company.website,careers:company.careers}])),
@@ -392,7 +404,7 @@ export const startupLinks: Record<string, { website: string; careers: string }> 
   "slurrp-farm":{website:"https://slurrpfarm.com/",careers:"https://www.linkedin.com/company/slurrp-farm/jobs/"},
 };
 
-const allStartupRecords = [...featuredStartups, ...additionalStartups, ...bulkStartups, ...directoryStartups, ...directoryStartups2, ...directoryStartups3, ...directoryStartups4, ...directoryStartups5, ...directoryStartups6, ...directoryStartups7, ...bangaloreMapStartups, ...remoteDirectoryStartups, ...targetTechStartups]
+const allStartupRecords = [...featuredStartups, ...additionalStartups, ...bulkStartups, ...directoryStartups, ...directoryStartups2, ...directoryStartups3, ...directoryStartups4, ...directoryStartups5, ...directoryStartups6, ...directoryStartups7, ...bangaloreMapStartups, ...multiCityStartups, ...remoteDirectoryStartups, ...targetTechStartups]
   .filter((startup) => startup.slug !== "ensembl")
   .map((startup) => {
     const override=locationOverrides[startup.slug as keyof typeof locationOverrides];
@@ -409,6 +421,7 @@ export const mappedStartups = startups.filter(startup=>startup.city!=="India");
 export const locationUnverifiedStartups = startups.filter(startup=>startup.city==="India");
 
 export const startupSources: Record<string, string> = {
+  ...Object.fromEntries(multiCityCompanies.map(company=>[company.slug,company.source])),
   ...Object.fromEntries(bangaloreMapCompanies.map(company=>[company.slug,company.source])),
   ...Object.fromEntries(targetTechCompanies.map(company=>[company.slug,company.source])),
   ...Object.fromEntries(remoteCompanies.map(company=>[company.slug,company.source])),
